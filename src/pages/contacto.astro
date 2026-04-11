@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Contacto">
+  <section class="hero min-h-[70vh] rounded-box bg-base-100 shadow">
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold">Contáctanos</h1>
+        <p class="py-6">
+          ¿Tienes alguna pregunta? Envíanos un mensaje.
+        </p>
+        <form class="space-y-4">
+          <input type="text" placeholder="Nombre" class="input input-bordered w-full" />
+          <input type="email" placeholder="Email" class="input input-bordered w-full" />
+          <textarea placeholder="Mensaje" class="textarea textarea-bordered w-full"></textarea>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

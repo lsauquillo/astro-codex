@@ -1,0 +1,17 @@
+---
+// Componente de navegación
+import astroLogo from '../assets/astro.svg';
+---
+
+<nav class="navbar  bg-amber-200 rounded-box h-2">
+  <div class="navbar-start">
+    <img src={astroLogo.src} width="80" height="80" alt="Astro Logo" />
+  </div>
+  <div class="navbar-end">
+    <div class="flex space-x-2">
+      <a href="/" class="btn bg-white hover:bg-gray-500 hover:text-white">Inicio</a>
+      <a href="/about" class="btn bg-white hover:bg-gray-500 hover:text-white">About</a>
+      <a href="/contacto" class="btn bg-white hover:bg-gray-500 hover:text-white">Contacto</a>
+    </div>
+  </div>
+</nav

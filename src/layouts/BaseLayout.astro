@@ -1,5 +1,6 @@
 ---
 import "@/styles/global.css";
+import Nav from "@/components/Nav.astro";
 
 interface Props {
   title?: string;
@@ -15,7 +16,12 @@ const { title = "Mi proyecto Astro" } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
   </head>
+
   <body class="min-h-screen bg-base-200 text-base-content">
+    <div>
+      <Nav />
+    </div>
+
     <main class="mx-auto max-w-4xl p-6">
       <slot />
     </main>
