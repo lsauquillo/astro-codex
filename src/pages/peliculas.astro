@@ -1,0 +1,63 @@
+---
+import "../styles/global.css";
+const API_KEY = import.meta.env.TMDB_API_KEY;
+// console.log("KEY:", import.meta.env.TMDB_API_KEY);
+
+let movies = [];
+let error = "";
+
+try {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=es-ES&page=1`
+  );
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    error = data.status_message || "Error al consultar TMDB";
+  } else {
+    movies = data.results.slice(0, 20) ?? [];
+  }
+} catch (err) {
+  error = "No se pudieron cargar las películas";
+  console.error(err);
+}
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Películas populares</title>
+  </head>
+
+  <body >
+    <main >
+      <h1 class="text-5xl font-bold mb-8 text-center">
+        Películas populares
+      </h1>
+
+     
+
+      <div class="grid grid-cols-4 gap-6 m-6">
+        {movies.map((movie) => (
+          <div >
+            
+              <img height="200"        
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+              />
+            
+           
+
+            <div class="p-4">
+              <h2 class="text-sm font-semibold">{movie.title}</h2>
+              <p class="text-yellow-400 mt-2 text-sm">
+                ⭐ {movie.vote_average}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
+  </body>
+</html>
