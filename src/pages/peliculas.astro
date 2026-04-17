@@ -1,6 +1,8 @@
 ---
-import "../styles/global.css";
-const API_KEY = import.meta.env.TMDB_API_KEY;
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SearchMovies from "../components/SearchMovies.vue";
+
+const API_KEY = import.meta.env.PUBLIC_TMDB_API_KEY;
 // console.log("KEY:", import.meta.env.TMDB_API_KEY);
 
 let movies = [];
@@ -24,40 +26,34 @@ try {
 }
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Películas populares</title>
-  </head>
+<BaseLayout title="Películas populares">
+  <main>
+    <h1 class="text-5xl font-bold mb-8 text-center">
+      Películas populares
+    </h1>
 
-  <body >
-    <main >
-      <h1 class="text-5xl font-bold mb-8 text-center">
-        Películas populares
-      </h1>
+    <div class="m-6">
+      <SearchMovies client:load />
+    </div>
 
-     
+    <div class="grid grid-cols-4 gap-6 m-6">
+      {movies.map((movie: any) => (
+        <div>
+          <a href={`/peliculas/${movie.id}`} class="block overflow-hidden rounded-xl shadow-lg hover:opacity-90 transition-opacity duration-200">
+            <img height="200"
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={`Cartel de ${movie.title}`}
+            />
+          </a>
 
-      <div class="grid grid-cols-4 gap-6 m-6">
-        {movies.map((movie) => (
-          <div >
-            
-              <img height="200"        
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-              />
-            
-           
-
-            <div class="p-4">
-              <h2 class="text-sm font-semibold">{movie.title}</h2>
-              <p class="text-yellow-400 mt-2 text-sm">
-                ⭐ {movie.vote_average}
-              </p>
-            </div>
+          <div class="p-4">
+            <h2 class="text-sm font-semibold">{movie.title}</h2>
+            <p class="text-yellow-400 mt-2 text-sm">
+              ⭐ {movie.vote_average}
+            </p>
           </div>
-        ))}
-      </div>
-    </main>
-  </body>
-</html>
+        </div>
+      ))}
+    </div>
+  </main>
+</BaseLayout> http://localhost:4321/
