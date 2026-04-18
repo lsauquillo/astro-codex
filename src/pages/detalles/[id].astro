@@ -1,0 +1,118 @@
+---
+export const prerender = false;
+import BaseLayout from "../../layouts/BaseLayout.astro";
+const API_KEY = import.meta.env.PUBLIC_TMDB_API_KEY;
+const { id } = Astro.params;
+let movie = null;
+let trailer = null;
+let error = "";
+
+if (!id) {
+  error = "ID de película no proporcionado.";
+} else {
+  try {
+    const res = await fetch(
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=es-ES&append_to_response=videos`
+    );
+    const data = await res.json();
+
+    if (!res.ok) {
+      error = data.status_message || "No se encontró la película.";
+    } else {
+      movie = data;
+      const videos = (data.videos?.results ?? []) as any[];
+      trailer = videos.find(
+        (video: any) => video.site === "YouTube" && video.type === "Trailer"
+      );
+    }
+  } catch (err) {
+    error = "No se pudo cargar el detalle de la película.";
+    console.error(err);
+  }
+}
+---
+
+<BaseLayout title={movie ? movie.title : "Detalle de película"}>
+  <main class="space-y-8">
+    <a href="/peliculas" class="text-blue-600 hover:underline">
+      ← Volver a películas
+    </a>
+
+    {error ? (
+      <div class="rounded-xl bg-red-100 p-6 text-red-700">{error}</div>
+    ) : movie ? (
+      <div class="grid gap-8 md:grid-cols-[360px_minmax(0,1fr)] items-start">
+        <div class="rounded-xl overflow-hidden shadow-xl bg-slate-900">
+          <img
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt={`Cartel de ${movie.title}`}
+            class="w-full h-auto object-cover"
+          />
+        </div>
+
+        <section class="space-y-6">
+          <div>
+            <h1 class="text-4xl font-bold">{movie.title}</h1>
+            <p class="text-sm text-slate-400 mt-2">
+              Estreno: {movie.release_date} · Duración: {movie.runtime} min · Puntuación: ⭐ {movie.vote_average} · Votos: {movie.vote_count}
+            </p>
+            <p class="text-sm text-slate-400">
+              Idioma original: {movie.original_language?.toUpperCase()} · Estado: {movie.status}
+            </p>
+          </div>
+
+          {movie.tagline ? <p class="italic text-slate-300">"{movie.tagline}"</p> : null}
+
+          <div class="space-y-6">
+            <div>
+              <h2 class="text-2xl font-semibold mb-3">Sinopsis</h2>
+              <p class="leading-7 text-slate-600">{movie.overview}</p>
+            </div>
+
+            {movie.genres?.length ? (
+              <div>
+                <h2 class="text-2xl font-semibold mb-3">Géneros</h2>
+                <div class="flex flex-wrap gap-2">
+                  {movie.genres.map((genre: any) => (
+                    <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-200 text-sm">{genre.name}</span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {movie.production_companies?.length ? (
+              <div>
+                <h2 class="text-2xl font-semibold mb-3">Productoras</h2>
+                <div class="flex flex-wrap gap-2">
+                  {movie.production_companies.map((company: any) => (
+                    <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-200 text-sm">{company.name}</span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            <div>
+              <h2 class="text-2xl font-semibold mb-3">Tráiler</h2>
+              {trailer ? (
+                <div class="aspect-video rounded-xl overflow-hidden shadow-lg bg-black">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${trailer.key}`}
+                    title={`Tráiler de ${movie.title}`}
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="w-full h-full"
+                  />
+                </div>
+              ) : (
+                <p class="text-slate-400">No hay tráiler disponible para esta película.</p>
+              )}
+            </div>
+          </div>
+        </section>
+      </div>
+    ) : (
+      <p>Cargando detalles...</p>
+    )}
+  </main>
+</BaseLayout>

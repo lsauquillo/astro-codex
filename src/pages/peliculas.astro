@@ -1,16 +1,15 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import SearchMovies from "../components/SearchMovies.vue";
 
 const API_KEY = import.meta.env.PUBLIC_TMDB_API_KEY;
-// console.log("KEY:", import.meta.env.TMDB_API_KEY);
+// console.log("KEY:", import.meta.env.PUBLIC_TMDB_API_KEY);
 
 let movies = [];
 let error = "";
 
 try {
   const res = await fetch(
-    `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=es-ES&page=1`
+    `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=es-ES&page=1`,
   );
 
   const data = await res.json();
@@ -28,32 +27,33 @@ try {
 
 <BaseLayout title="Películas populares">
   <main>
-    <h1 class="text-5xl font-bold mb-8 text-center">
-      Películas populares
-    </h1>
-
-    <div class="m-6">
-      <SearchMovies client:load />
-    </div>
+    <h1 class="text-5xl font-bold mb-8 text-center">Películas populares</h1>
 
     <div class="grid grid-cols-4 gap-6 m-6">
-      {movies.map((movie: any) => (
-        <div>
-          <a href={`/peliculas/${movie.id}`} class="block overflow-hidden rounded-xl shadow-lg hover:opacity-90 transition-opacity duration-200">
-            <img height="200"
-              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              alt={`Cartel de ${movie.title}`}
-            />
-          </a>
+      {
+        movies.map((movie: any) => (
+          <div>
+            <a
+              href={`/detalles/${movie.id}`}
+              class="block overflow-hidden rounded-xl shadow-lg hover:opacity-90 transition-opacity duration-200"
+            >
+              <img
+                height="200"
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={`Cartel de ${movie.title}`}
+              />
+            </a>
 
-          <div class="p-4">
-            <h2 class="text-sm font-semibold">{movie.title}</h2>
-            <p class="text-yellow-400 mt-2 text-sm">
-              ⭐ {movie.vote_average}
-            </p>
+            <div class="p-4">
+              <h2 class="text-sm font-semibold">{movie.title}</h2>
+              <p class="text-yellow-400 mt-2 text-sm">
+                ⭐ {movie.vote_average}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      }
     </div>
   </main>
-</BaseLayout> http://localhost:4321/
+</BaseLayout>
+
