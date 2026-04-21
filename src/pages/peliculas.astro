@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Search from "../components/Search.vue";
 
 const API_KEY = import.meta.env.PUBLIC_TMDB_API_KEY;
 // console.log("KEY:", import.meta.env.PUBLIC_TMDB_API_KEY);
@@ -29,31 +30,11 @@ try {
   <main>
     <h1 class="text-5xl font-bold mb-8 text-center">Películas populares</h1>
 
-    <div class="grid grid-cols-4 gap-6 m-6">
-      {
-        movies.map((movie: any) => (
-          <div>
-            <a
-              href={`/detalles/${movie.id}`}
-              class="block overflow-hidden rounded-xl shadow-lg hover:opacity-90 transition-opacity duration-200"
-            >
-              <img
-                height="200"
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={`Cartel de ${movie.title}`}
-              />
-            </a>
-
-            <div class="p-4">
-              <h2 class="text-sm font-semibold">{movie.title}</h2>
-              <p class="text-yellow-400 mt-2 text-sm">
-                ⭐ {movie.vote_average}
-              </p>
-            </div>
-          </div>
-        ))
-      }
-    </div>
+    {error ? (
+      <p class="text-center text-red-500">{error}</p>
+    ) : (
+      <Search client:load movies={movies} apiKey={API_KEY} />
+    )}
   </main>
 </BaseLayout>
 
